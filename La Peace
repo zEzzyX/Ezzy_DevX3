@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Peace - @pheez.am</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: #1e293b;
+            padding: 28px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            border: 1px solid #334155;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            color: #38bdf8;
+            letter-spacing: -0.5px;
+        }
+        .video-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>La Peace</h1>
+        <div class="video-wrapper">
+            <!-- Full Working TikTok Video Embed -->
+            <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@pheez.am/video/7676121351429819671" data-video-id="7676121351429819671" style="max-width: 605px;min-width: 325px;">
+                <section>
+                    <a target="_blank" title="@pheez.am" href="https://www.tiktok.com/@pheez.am?refer=embed">@pheez.am</a>
+                </section>
+            </blockquote>
+            <script async src="https://www.tiktok.com/embed.js"></script>
+        </div>
+    </div>
+
+</body>
+</html>
