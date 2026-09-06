@@ -1,0 +1,134 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+    Name = "Void Hub",
+    LoadingTitle = "Void Initializing...",
+    LoadingSubtitle = "Container Utility",
+    ConfigurationSaving = { Enabled = false },
+    Discord = { Enabled = false },
+    KeySystem = false
+})
+
+local MainTab = Window:CreateTab("Main", 4483362458)
+local PlayerTab = Window:CreateTab("Player Settings", 4483362458)
+
+-- Services & Local Variables
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local autoLoop = false
+local savedCFrame = nil
+
+----------------------------------------------------
+-- HELPER FUNCTIONS
+----------------------------------------------------
+
+local function getTargetPart()
+    local sc = workspace:FindFirstChild("Shippingcontainers")
+    if sc then
+        local children = sc:GetChildren()
+        if children[6] and children[6]:GetChildren()[2] then
+            return children[6]:GetChildren()[2]
+        end
+    end
+    return nil
+end
+
+local function executeTeleportAndReset()
+    local chr = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+    local hrp = chr:WaitForChild("HumanoidRootPart", 5)
+    
+    local target = getTargetPart()
+    if target and hrp then
+        hrp.CFrame = target.CFrame
+        task.wait(2)
+        
+        local hum = chr:FindFirstChildOfClass("Humanoid")
+        if hum then
+            hum.Health = 0
+        end
+        return true
+    else
+        Rayfield:Notify({
+            Title = "Target Not Found",
+            Content = "Shipping container #6 / Part #2 is missing!",
+            Duration = 3
+        })
+        return false
+    end
+end
+
+----------------------------------------------------
+-- MAIN TAB
+----------------------------------------------------
+
+MainTab:CreateSection("Single Executions")
+
+MainTab:CreateButton({
+    Name = "TP to Container & Reset",
+    Callback = function()
+        executeTeleportAndReset()
+    end,
+})
+
+MainTab:CreateButton({
+    Name = "Save Current Position",
+    Callback = function()
+        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            savedCFrame = LocalPlayer.Character.HumanoidRootPart.CFrame
+            Rayfield:Notify({ Title = "Position Saved", Content = "Saved your current coordinates.", Duration = 2 })
+        end
+    end,
+})
+
+MainTab:CreateButton({
+    Name = "Return to Saved Position",
+    Callback = function()
+        if savedCFrame and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            LocalPlayer.Character.HumanoidRootPart.CFrame = savedCFrame
+        else
+            Rayfield:Notify({ Title = "Error", Content = "No saved position found!", Duration = 2 })
+        end
+    end,
+})
+
+MainTab:CreateSection("Automation")
+
+MainTab:CreateToggle({
+    Name = "Auto TP & Reset Loop",
+    CurrentValue = false,
+    Flag = "AutoContainerLoop",
+    Callback = function(Value)
+        autoLoop = Value
+        task.spawn(function()
+            while autoLoop do
+                local success = executeTeleportAndReset()
+                if not success then
+                    autoLoop = false
+                    break
+                end
+                
+                LocalPlayer.CharacterAdded:Wait()
+                task.wait(1)
+            end
+        end)
+    end,
+})
+
+----------------------------------------------------
+-- PLAYER TAB
+----------------------------------------------------
+
+PlayerTab:CreateSlider({
+    Name = "WalkSpeed",
+    Range = {16, 200},
+    Increment = 1,
+    Suffix = "Speed",
+    CurrentValue = 16,
+    Flag = "SpeedSlider",
+    Callback = function(Value)
+        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+            LocalPlayer.Character.Humanoid.WalkSpeed = Value
+        end
+    end,
+})
