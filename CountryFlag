@@ -1,0 +1,73 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+    Name = "Void",
+    LoadingTitle = "Void Initializing...",
+    LoadingSubtitle = "Duel Table Utility",
+    ConfigurationSaving = { Enabled = false },
+    Discord = { Enabled = false },
+    KeySystem = false
+})
+
+local MainTab = Window:CreateTab("Duel Board", 4483362458)
+
+local autoReveal = false
+
+local function revealCharacters()
+    local duel = workspace:FindFirstChild("DuelTables")
+    if not duel then 
+        Rayfield:Notify({
+            Title = "Error",
+            Content = "DuelTables folder not found in Workspace!",
+            Duration = 3
+        })
+        return 
+    end
+
+    for _, duelTable in ipairs(duel:GetChildren()) do
+        if duelTable:FindFirstChild("Board1Grid") and duelTable:FindFirstChild("Board2Grid") then
+            for _, v in ipairs(duelTable.Board1Grid:GetChildren()) do
+                if v:FindFirstChild("SurfaceGui") and v.SurfaceGui:FindFirstChild("CharacterImage") and v.SurfaceGui:FindFirstChild("ImageLabel") then
+                    v.SurfaceGui.CharacterImage.Visible = true
+                    v.SurfaceGui.ImageLabel.Visible = false
+                end
+            end
+
+            for _, v in ipairs(duelTable.Board2Grid:GetChildren()) do
+                if v:FindFirstChild("SurfaceGui") and v.SurfaceGui:FindFirstChild("CharacterImage") and v.SurfaceGui:FindFirstChild("ImageLabel") then
+                    v.SurfaceGui.CharacterImage.Visible = true
+                    v.SurfaceGui.ImageLabel.Visible = false
+                end
+            end
+        end
+    end
+end
+
+MainTab:CreateSection("Reveal Controls")
+
+MainTab:CreateButton({
+    Name = "Reveal Character Images (Once)",
+    Callback = function()
+        revealCharacters()
+        Rayfield:Notify({
+            Title = "Success",
+            Content = "Character images revealed on all duel boards!",
+            Duration = 3
+        })
+    end,
+})
+
+MainTab:CreateToggle({
+    Name = "Auto Reveal Characters (Loop)",
+    CurrentValue = false,
+    Flag = "AutoRevealFlag",
+    Callback = function(Value)
+        autoReveal = Value
+        task.spawn(function()
+            while autoReveal do
+                pcall(revealCharacters)
+                task.wait(1)
+            end
+        end)
+    end,
+})
